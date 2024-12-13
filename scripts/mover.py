@@ -92,10 +92,16 @@ def filter_torrents(torrent_list, timeoffset_from, timeoffset_to, cache_mount):
 
 def exists_in_cache(cache_mount, content_path):
     if content_path.startswith(cache_mount):
-        cache_path = content_path
+        tor_path = content_path
+        cache_path = tor_pth
     else:
-        cache_path = os.path.join(cache_mount, content_path.lstrip("/"))
-    return os.path.exists(cache_path)
+        tor_path = content_path.lstrip("/")
+        cache_path = os.path.join(cache_mount, tor_path)
+    if os.path.exists(cache_path):
+        return True
+    else:
+        logging.debug(f"Torrent content_path [{tor_path}] not found in Cache Mount of [{cache_mount}]")
+        return False
 
 
 def stop_start_torrents(torrent_list, pause=True):
