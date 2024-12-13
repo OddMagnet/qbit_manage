@@ -120,7 +120,7 @@ if __name__ == "__main__":
     timeoffset_from = current - timedelta(days=args.days_from)
     timeoffset_to = current - timedelta(days=args.days_to)
     torrent_list = client.torrents.info(status_filter=args.status_filter, sort="added_on", reverse=True)
-
+    logging.info(f"TimeOffsets from {timeoffset_from} and to {timeoffset_to} with current {current}")
     torrents = filter_torrents(torrent_list, timeoffset_from.timestamp(), timeoffset_to.timestamp(), args.cache_mount)
 
     # Pause Torrents
