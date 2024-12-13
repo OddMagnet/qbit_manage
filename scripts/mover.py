@@ -91,7 +91,10 @@ def filter_torrents(torrent_list, timeoffset_from, timeoffset_to, cache_mount):
 
 
 def exists_in_cache(cache_mount, content_path):
-    cache_path = os.path.join(cache_mount, content_path.lstrip("/"))
+    if content_path.startswith(cache_mount):
+        cache_path = content_path
+    else:
+        cache_path = os.path.join(cache_mount, content_path.lstrip("/"))
     return os.path.exists(cache_path)
 
 
@@ -124,7 +127,6 @@ if __name__ == "__main__":
     timeoffset_from = current - timedelta(days=args.days_from)
     timeoffset_to = current - timedelta(days=args.days_to)
     torrent_list = client.torrents.info(status_filter=args.status_filter, sort="added_on", reverse=True)
-    logging.info(f"TimeOffsets from {timeoffset_from} and to {timeoffset_to} with current {current}")
     torrents = filter_torrents(torrent_list, timeoffset_from.timestamp(), timeoffset_to.timestamp(), args.cache_mount)
 
     # Pause Torrents
