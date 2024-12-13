@@ -125,7 +125,7 @@ def exists_in_cache(cache_mount, content_path):
     if os.path.exists(cache_path):
         return True
     else:
-        logging.debug(f"Torrent content_path [{tor_path}] not found in Cache Mount of [{cache_mount}]")
+        logging.debug(f"Torrent not found at cache path [{cache_path}]")
         return False
 
 
