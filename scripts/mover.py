@@ -84,7 +84,7 @@ def filter_torrents(torrent_list, timeoffset_from, timeoffset_to, cache_mount):
             elif exists_in_cache(cache_mount, torrent.content_path):
                 result.append(torrent)
             else:
-                logger.debug(f"Torrent content_path [{torrent.content_path}] not found in Cache Mount of [{cache_mount}]")
+                logging.debug(f"Torrent content_path [{torrent.content_path}] not found in Cache Mount of [{cache_mount}]")
         elif torrent.added_on < timeoffset_to:
             break
     return result
