@@ -104,7 +104,8 @@ def filter_torrents(
             or exists_in_cache(cache_mount, torrent.content_path)
         )
     ]
-    
+    num_tors_count = sum(1 for torrent in torrent_list if timeoffset_to <= torrent.added_on <= timeoffset_from)
+    logger.debug(f"Processing {num_tors_count} torrents between date ranges")
     for torrent in torrent_list:
         if timeoffset_to <= torrent.added_on <= timeoffset_from and cache_mount:
             if not exists_in_cache(cache_mount, torrent.content_path):
