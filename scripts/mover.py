@@ -8,6 +8,7 @@ import sys
 import time
 from datetime import datetime
 from datetime import timedelta
+from typing import List
 
 # Configure logging
 logging.basicConfig(
@@ -75,25 +76,48 @@ except ModuleNotFoundError:
     sys.exit(1)
 
 
-def filter_torrents(torrent_list, timeoffset_from, timeoffset_to, cache_mount):
-    result = []
+from typing import List
+
+def filter_torrents(
+    torrent_list: List[Torrent], 
+    timeoffset_from: int, 
+    timeoffset_to: int, 
+    cache_mount: str
+) -> List[Torrent]:
+    """
+    Filters torrents based on time offsets and cache availability.
+    Debugs Torrents that are valid and not on cache.
+    Args:
+        torrent_list (List[Torrent]): List of torrent objects.
+        timeoffset_from (int): The upper time offset for filtering.
+        timeoffset_to (int): The lower time offset for filtering.
+        cache_mount (str): Path to the cache mount directory.
+
+    Returns:
+        List[Torrent]: Filtered list of torrents.
+    """
+    result = [
+        torrent for torrent in torrent_list
+        if timeoffset_to <= torrent.added_on <= timeoffset_from
+        and (
+            not cache_mount
+            or exists_in_cache(cache_mount, torrent.content_path)
+        )
+    ]
+    
     for torrent in torrent_list:
-        if torrent.added_on >= timeoffset_to and torrent.added_on <= timeoffset_from:
-            if not cache_mount:
-                result.append(torrent)
-            elif exists_in_cache(cache_mount, torrent.content_path):
-                result.append(torrent)
-            else:
+        if timeoffset_to <= torrent.added_on <= timeoffset_from and cache_mount:
+            if not exists_in_cache(cache_mount, torrent.content_path):
                 logging.debug(f"Torrent content_path [{torrent.content_path}] not found in Cache Mount of [{cache_mount}]")
-        elif torrent.added_on < timeoffset_to:
-            break
+    
     return result
+
 
 
 def exists_in_cache(cache_mount, content_path):
     if content_path.startswith(cache_mount):
         tor_path = content_path
-        cache_path = tor_pth
+        cache_path = tor_path
     else:
         tor_path = content_path.lstrip("/")
         cache_path = os.path.join(cache_mount, tor_path)
