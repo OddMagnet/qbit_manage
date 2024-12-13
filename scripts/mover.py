@@ -79,11 +79,11 @@ except ModuleNotFoundError:
 from typing import List
 
 def filter_torrents(
-    torrent_list: List[Torrent], 
+    torrent_list: List, 
     timeoffset_from: int, 
     timeoffset_to: int, 
     cache_mount: str
-) -> List[Torrent]:
+) -> List:
     """
     Filters torrents based on time offsets and cache availability.
     Debugs Torrents that are valid and not on cache.
